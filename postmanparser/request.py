@@ -37,14 +37,23 @@ class Request:
         proxy = ProxyConfig.parse(data["proxy"]) if "proxy" in data else None
         certificate = Auth.parse(data["certificate"]) if "certificate" in data else None
 
+        url = data.get("url", "")
+        if isinstance(url, dict):
+            url = Url.parse(url)
+
+        description = data.get("description")
+        if isinstance(description, dict):
+            description = Description.parse(description)
+
         return cls(
-            Url.parse(data["url"]),
+            url,
             data.get("method", ""),
             auth=auth,
             proxy=proxy,
             certificate=certificate,
             header=header,
             body=body,
+            description=description,
         )
 
 

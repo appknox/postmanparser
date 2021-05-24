@@ -7,7 +7,7 @@ class BaseEnum(Enum):
         for enum in cls:
             if enum.value == value:
                 return True
-            return False
+        return False
 
 
 class RequestBodyMode(BaseEnum):

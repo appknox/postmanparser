@@ -22,7 +22,9 @@ class Item:
     """
 
     request: Union[Request, str]
+    id: str = ""
     name: str = ""
+    description: Union[Description, str, None] = None
     response: List[Response] = None
 
     @classmethod
@@ -46,7 +48,17 @@ class Item:
             response_list = data["response"]
             response = [Response.parse(resp) for resp in response_list]
 
-        return cls(request, name=data.get("name", ""), response=response)
+        description = data.get("description")
+        if isinstance(description, dict):
+            description = Description.parse(description)
+
+        return cls(
+            request,
+            id=data.get("id", ""),
+            name=data.get("name", ""),
+            description=description,
+            response=response,
+        )
 
 
 @dataclass
@@ -67,12 +79,14 @@ class ItemGroup:
             )
         items = parse_item_list(item_list)
 
+        description = data.get("description")
+        if isinstance(description, dict):
+            description = Description.parse(description)
+
         return cls(
             item=items,
             name=data.get("name", ""),
-            description=Description.parse(data["description"])
-            if "description" in data
-            else None,
+            description=description,
             variable=Variable.parse(data["variable"]) if "variable" in data else None,
             auth=Auth.parse(data["auth"]) if "auth" in data else None,
         )

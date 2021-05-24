@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from postmanparser.exceptions import MissingRequiredFieldException
 from postmanparser.constants import VariableType
 from postmanparser.description import Description
 from typing import Any, Union
@@ -18,8 +19,10 @@ class Variable:
     def parse(cls, data: dict):
         id = data.get("id")
         key = data.get("key")
-        if id is None or key is None:
-            raise Exception("variable should have 'id' and 'key'")
+        if id is None and key is None:
+            raise MissingRequiredFieldException(
+                " 'variable' should have either 'id' or 'key' property"
+            )
         var_type = data.get("type")
         if var_type is not None:
             if not VariableType.has_value(var_type):
@@ -27,6 +30,9 @@ class Variable:
                 raise Exception(
                     f"Invalid value of 'type' property of 'Variable' object. Must be one of the {','.join(values)}"
                 )
+        description = data.get("description")
+        if isinstance(description, dict):
+            description = Description.parse(description)
 
         return cls(
             id=id,
@@ -34,6 +40,6 @@ class Variable:
             value=data.get("value"),
             variable_type=data.get("type", "any"),
             name=data.get("name", ""),
-            description=Description.parse(data.get("description", {})),
+            description=description,
             system=data.get("system", False),
         )

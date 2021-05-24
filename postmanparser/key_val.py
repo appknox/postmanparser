@@ -13,12 +13,12 @@ class KeyVal:
 
     @classmethod
     def parse(cls, data: dict):
-        desc = data.get("description", None)
-        if desc:
-            desc = Description.parse(desc)
+        description = data.get("description")
+        if isinstance(description, dict):
+            description = Description.parse(description)
         return cls(
             data.get("key", ""),
             data.get("value", ""),
             disabled=data.get("disabled", False),
-            description=desc,
+            description=description,
         )

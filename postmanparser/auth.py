@@ -1,11 +1,16 @@
 from dataclasses import dataclass
-from typing import List
+from postmanparser.constants import AuthType
+from postmanparser.exceptions import (
+    InvalidPropertyValueException,
+    MissingRequiredFieldException,
+)
+from typing import Any, List
 
 
 @dataclass
 class AuthAttribute:
     key: str
-    value = None
+    value: Any = None
     auth_attr_type: str = None
 
     @classmethod
@@ -31,3 +36,41 @@ class Auth:
     oauth1: List[AuthAttribute] = None
     oauth2: List[AuthAttribute] = None
     ntlm: List[AuthAttribute] = None
+
+    @classmethod
+    def parse(cls, data: dict):
+        auth_type = data.get("type")
+        if auth_type is None:
+            MissingRequiredFieldException(" 'auth' object should have 'type' property.")
+        auth_type_values = [e.value for e in AuthType]
+        if not AuthType.has_value(auth_type):
+            InvalidPropertyValueException(
+                f"Invalid value of 'type' property of 'auth' object. Must be one of the {auth_type_values}"
+            )
+        cls_instance = cls(auth_type)
+        for key in data:
+            if not key in auth_type_values:
+                continue
+            auth_data = data[key]
+            is_list = isinstance(auth_data, list)
+            is_dict = isinstance(auth_data, dict)
+            if not is_list and not is_dict:
+                InvalidPropertyValueException(
+                    f"Invalid value of '{key}' property' of 'auth' object. Must be an object or list of objects."
+                )
+            attr_list = []
+            if is_list:
+                # It should be supporting auth attribute object
+                for _data in auth_data:
+                    attr_list.append(AuthAttribute.parse(_data))
+            if is_dict:
+                for key in auth_data:
+                    attr_list.append(
+                        AuthAttribute(
+                            key,
+                            value=auth_data[key],
+                            auth_attr_type=type(auth_data[key]),
+                        )
+                    )
+            cls_instance.key = attr_list
+        return cls_instance
