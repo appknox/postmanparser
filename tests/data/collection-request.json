@@ -2,7 +2,7 @@
     "info": {
         "name": "HTTP Status Messages",
         "id": "my-collection-id",
-        "_postman_schema": "https://schema.getpostman.com/#2.0.0",
+        "schema": "https://schema.getpostman.com/#2.0.0",
         "version": {
             "major": "2",
             "minor": "0",

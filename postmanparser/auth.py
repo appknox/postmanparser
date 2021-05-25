@@ -11,14 +11,14 @@ from typing import Any, List
 class AuthAttribute:
     key: str
     value: Any = None
-    auth_attr_type: str = None
+    auth_attr_type: str = ""
 
     @classmethod
     def parse(cls, data: dict):
         key = data.get("key")
         if key is None:
             raise Exception("auth-attribute object should have 'key' property")
-        return cls(key, value=data.get("value"), auth_attr_type=data.get("type"))
+        return cls(key, value=data.get("value"), auth_attr_type=data.get("type", ""))
 
 
 @dataclass
@@ -64,13 +64,13 @@ class Auth:
                 for _data in auth_data:
                     attr_list.append(AuthAttribute.parse(_data))
             if is_dict:
-                for key in auth_data:
+                for auth_key in auth_data:
                     attr_list.append(
                         AuthAttribute(
-                            key,
-                            value=auth_data[key],
-                            auth_attr_type=type(auth_data[key]),
+                            auth_key,
+                            value=auth_data[auth_key],
+                            auth_attr_type=(auth_data.get("type", "")),
                         )
                     )
-            cls_instance.key = attr_list
+            setattr(cls_instance, key, attr_list)
         return cls_instance

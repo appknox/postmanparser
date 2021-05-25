@@ -1,5 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from postmanparser.exceptions import (
+    InvalidPropertyValueException,
+    MissingRequiredFieldException,
+)
 from postmanparser.constants import RequestBodyMode
 from typing import List, Union
 
@@ -71,22 +75,38 @@ class RequestBody:
     @classmethod
     def parse(cls, data: dict):
         if "mode" not in data:
-            raise Exception("Request body should have 'mode' property")
+            raise MissingRequiredFieldException(
+                "Request body should have 'mode' property"
+            )
         mode = data["mode"]
         if not RequestBodyMode.has_value(mode):
             values = [e.value for e in RequestBodyMode]
-            raise Exception(
+            raise InvalidPropertyValueException(
                 f"Invalid value of 'mode' property. Must be one of the {','.join(values)}"
             )
         raw = ""
         urlencoded = None
+        formdata = None
         if mode == "raw":
             raw = data.get("raw", "")
         elif mode == "urlencoded":
             urlencoded = [
                 KeyVal.parse(key_val) for key_val in data.get("urlencoded", [])
             ]
-        return cls(mode=mode, raw=raw, urlencoded=urlencoded)
+        elif mode == "formdata":
+            formdata = [FormParameter.parse(data) for data in data.get("formdata", [])]
+        request_body_file = (
+            RequestBodyFile.parse(data.get("file")) if data.get("file") else None
+        )
+        return cls(
+            mode=mode,
+            raw=raw,
+            urlencoded=urlencoded,
+            formdata=formdata,
+            request_body_file=request_body_file,
+            options=data.get("options", None),
+            disabled=data.get("disabled", False),
+        )
 
 
 @dataclass
@@ -96,4 +116,4 @@ class RequestBodyFile:
 
     @classmethod
     def parse(cls, data: dict):
-        return cls()
+        return cls(src=data.get("src"), content=data.get("content", ""))
