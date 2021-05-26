@@ -1,10 +1,10 @@
 from dataclasses import dataclass
+from typing import Any
+from typing import List
+
 from postmanparser.constants import AuthType
-from postmanparser.exceptions import (
-    InvalidPropertyValueException,
-    MissingRequiredFieldException,
-)
-from typing import Any, List
+from postmanparser.exceptions import InvalidPropertyValueException
+from postmanparser.exceptions import MissingRequiredFieldException
 
 
 @dataclass
@@ -17,7 +17,9 @@ class AuthAttribute:
     def parse(cls, data: dict):
         key = data.get("key")
         if key is None:
-            raise MissingRequiredFieldException("auth-attribute object should have 'key' property")
+            raise MissingRequiredFieldException(
+                "auth-attribute object should have 'key' property"
+            )
         return cls(key, value=data.get("value"), auth_attr_type=data.get("type", ""))
 
 
@@ -45,18 +47,20 @@ class Auth:
         auth_type_values = [e.value for e in AuthType]
         if not AuthType.has_value(auth_type):
             InvalidPropertyValueException(
-                f"Invalid value of 'type' property of 'auth' object. Must be one of the {auth_type_values}"
+                f"Invalid value of 'type' property of 'auth' object."
+                f" Must be one of the {auth_type_values}"
             )
         cls_instance = cls(auth_type)
         for key in data:
-            if not key in auth_type_values:
+            if key not in auth_type_values:
                 continue
             auth_data = data[key]
             is_list = isinstance(auth_data, list)
             is_dict = isinstance(auth_data, dict)
             if not is_list and not is_dict:
                 InvalidPropertyValueException(
-                    f"Invalid value of '{key}' property' of 'auth' object. Must be an object or list of objects."
+                    f"Invalid value of '{key}' property' of 'auth' object. "
+                    f"Must be an object or list of objects."
                 )
             attr_list = []
             if is_list:

@@ -1,5 +1,7 @@
-import pytest
 import json
+
+import pytest
+
 from postmanparser import Collection
 
 COLLECTION_V2_FILE = "tests/data/collection-request.json"

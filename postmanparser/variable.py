@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from postmanparser.exceptions import (
-    InvalidPropertyValueException,
-    MissingRequiredFieldException,
-)
+from typing import Any
+from typing import Union
+
 from postmanparser.constants import VariableType
 from postmanparser.description import Description
-from typing import Any, Union
+from postmanparser.exceptions import InvalidPropertyValueException
+from postmanparser.exceptions import MissingRequiredFieldException
 
 
 @dataclass
@@ -31,7 +31,8 @@ class Variable:
             if not VariableType.has_value(var_type):
                 values = [e.value for e in VariableType]
                 raise InvalidPropertyValueException(
-                    f"Invalid value of 'type' property of 'Variable' object. Must be one of the {','.join(values)}"
+                    f"Invalid value of 'type' property of 'Variable' object."
+                    f" Must be one of the {','.join(values)}"
                 )
         description = data.get("description")
         if isinstance(description, dict):

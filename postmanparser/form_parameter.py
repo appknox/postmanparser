@@ -1,11 +1,10 @@
 from dataclasses import dataclass
-from postmanparser.exceptions import (
-    InvalidObjectException,
-    MissingRequiredFieldException,
-)
-from typing import List, Union
+from typing import List
+from typing import Union
 
-from .description import Description
+from postmanparser.description import Description
+from postmanparser.exceptions import InvalidObjectException
+from postmanparser.exceptions import MissingRequiredFieldException
 
 
 @dataclass

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Union
+
 from postmanparser.description import Description
 from postmanparser.exceptions import MissingRequiredFieldException
 

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List
+from typing import Union
 
-from .key_val import KeyVal
-from .variable import Variable
+from postmanparser.key_val import KeyVal
+from postmanparser.variable import Variable
 
 
 @dataclass

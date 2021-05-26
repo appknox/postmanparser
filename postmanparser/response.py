@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List
+from typing import Union
 
-from .cookie import Cookie
-from .request import Request
-from .key_val import KeyVal
+from postmanparser.cookie import Cookie
+from postmanparser.key_val import KeyVal
+from postmanparser.request import Request
 
 
 @dataclass

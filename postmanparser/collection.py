@@ -1,12 +1,18 @@
+from dataclasses import dataclass
+from dataclasses import field
 import json
-from postmanparser.exceptions import MissingRequiredFieldException
-from postmanparser.auth import Auth
-from postmanparser.variable import Variable
-from typing import List, Union
-from dataclasses import dataclass, field
+from typing import List
+from typing import Union
 
-from .info import Info
-from .item import Item, ItemGroup, parse_item_list
+import httpx
+
+from postmanparser.auth import Auth
+from postmanparser.exceptions import MissingRequiredFieldException
+from postmanparser.info import Info
+from postmanparser.item import Item
+from postmanparser.item import ItemGroup
+from postmanparser.item import parse_item_list
+from postmanparser.variable import Variable
 
 
 @dataclass
@@ -20,7 +26,8 @@ class Collection:
     def validate(self, data):
         if "info" not in data or "item" not in data:
             raise MissingRequiredFieldException(
-                "Invalid Postman collection: Required 'info' and 'item' properties in 'collection' object"
+                "Invalid Postman collection: Required 'info' and 'item' "
+                "properties in 'collection' object"
             )
 
     def parse(self, data: dict):
@@ -42,7 +49,12 @@ class Collection:
             self.parse(data)
 
     def parse_from_url(self, url):
-        data = {}
-        # request to url
-        self.validate(data)
-        self.parse(data)
+        response = None
+        try:
+            response = httpx.get(url)
+        except Exception:
+            pass
+        if response is None:
+            return
+        self.validate(response.json())
+        self.parse(response.json())

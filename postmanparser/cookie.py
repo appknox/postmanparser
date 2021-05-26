@@ -1,6 +1,8 @@
 from dataclasses import dataclass
-from typing import List, Union
-from .exceptions import MissingRequiredFieldException
+from typing import List
+from typing import Union
+
+from postmanparser.exceptions import MissingRequiredFieldException
 
 
 @dataclass

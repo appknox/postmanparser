@@ -1,18 +1,17 @@
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import List, Union
+from typing import List
+from typing import Union
 
-
-from .request import Request
-from .response import Response
-from .description import Description
-from .variable import Variable
-from .auth import Auth
-from .exceptions import (
-    InvalidPropertyValueException,
-    MissingRequiredFieldException,
-    InvalidObjectException,
-)
+from postmanparser.auth import Auth
+from postmanparser.description import Description
+from postmanparser.exceptions import InvalidObjectException
+from postmanparser.exceptions import InvalidPropertyValueException
+from postmanparser.exceptions import MissingRequiredFieldException
+from postmanparser.request import Request
+from postmanparser.response import Response
+from postmanparser.variable import Variable
 
 
 @dataclass
@@ -99,7 +98,8 @@ def parse_item_list(item_list: List[dict]) -> List[Union[Item, ItemGroup]]:
         _item = item.get("item")
         if _item and request:
             InvalidObjectException(
-                "Invalid item in collection. Object cannot be either 'item' or 'item-group' and not both"
+                "Invalid item in collection. "
+                "Object cannot be either 'item' or 'item-group' and not both"
             )
         elif request is not None:
             items.append(Item.parse(item))
@@ -107,6 +107,7 @@ def parse_item_list(item_list: List[dict]) -> List[Union[Item, ItemGroup]]:
             items.append(ItemGroup.parse(item))
         else:
             InvalidObjectException(
-                "Invalid item in collection. Object should be either 'item' or 'item-group'"
+                "Invalid item in collection. "
+                "Object should be either 'item' or 'item-group'"
             )
     return items

@@ -1,7 +1,10 @@
 from postmanparser.item import ItemGroup
 
 
-def test_collection_item_req_fields_should_match_json_item_req(collection, json_data):
+def test_collection_item_req_fields_should_match_json_item_req(
+    collection,
+    json_data,
+):
     json_item = json_data["item"]
     for idx, itm in enumerate(collection.item):
         if type(itm) is ItemGroup:
@@ -34,7 +37,7 @@ def test_collection_item_req_body_should_match_json_item_req_body(
             continue
         json_req_body = json_req.get("body")
         if not json_req_body:
-            assert itm.request.body == None
+            assert itm.request.body is None
             continue
         assert itm.request.body.mode == json_req_body["mode"]
         if json_req_body["mode"] == "raw":
@@ -62,7 +65,7 @@ def test_collection_item_req_auth_should_match_json_item_req_auth(
                 continue
             json_req_auth = json_req.get("auth")
             if not json_req_auth:
-                assert item.request.auth == None
+                assert item.request.auth is None
                 continue
             json_req_auth_type = json_req_auth["type"]
             assert item.request.auth.auth_type == json_req_auth_type

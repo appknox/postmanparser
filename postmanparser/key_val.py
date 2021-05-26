@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union
 
-from .description import Description
+from postmanparser.description import Description
 
 
 @dataclass

@@ -1,9 +1,8 @@
-from postmanparser.exceptions import MissingRequiredFieldException
 import pytest
+
 from postmanparser.collection import Collection
-from postmanparser.proxy_config import ProxyConfig
+from postmanparser.exceptions import MissingRequiredFieldException
 from postmanparser.item import ItemGroup
-from postmanparser.description import Description
 
 
 def test_collection_no_of_item_should_match_with_json_items(collection, json_data):
@@ -38,7 +37,7 @@ def test_collection_valid_item_description_should_match_with_json_item(
             continue
         json_desc = json_item[i].get("description")
         if not json_desc:
-            assert itm.descrption == None
+            assert itm.descrption is None
         elif isinstance(json_desc, str):
             assert itm.description == json_desc
         else:
@@ -74,7 +73,7 @@ def test_collection_valid_item_no_of_responses_should_match_with_json_item(
         if json_resp:
             assert len(itm.response) == len(json_resp)
         else:
-            assert itm.response == None
+            assert itm.response is None
         i += 1
 
 
@@ -109,7 +108,7 @@ def test_collection_missing_info_should_throws_exception():
             {
                 "id": "request-200",
                 "description": {
-                    "content": "<h1>This is H1</h1> <i>italic</i> <script>this will be dropped in toString()</script>",
+                    "content": "<h1>This is H1</h1> <script>test toString()</script>",
                     "version": "2.0.1-abc+efg",
                 },
                 "name": "200 ok",

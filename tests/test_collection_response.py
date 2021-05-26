@@ -8,7 +8,7 @@ def test_collection_item_resp_should_match_json_item_resp(collection, json_data)
             continue
         json_resp = json_item[idx].get("response")
         if not json_resp:
-            assert itm.response == None
+            assert itm.response is None
         for i, resp in enumerate(json_resp):
             assert itm.response[i].id == resp.get("id", "")
             assert itm.response[i].response_time == resp.get("responseTime")
@@ -27,11 +27,11 @@ def test_collection_item_resp_cookie_should_match_json_item_resp_cookie(
             continue
         json_resp = json_item[idx].get("response")
         if not json_resp:
-            assert itm.response == None
+            assert itm.response is None
         for i, resp in enumerate(json_resp):
             json_resp_cookie = resp.get("cookie")
             if not json_resp_cookie:
-                assert itm.response[i].cookie == None
+                assert itm.response[i].cookie is None
             for j, cookie in enumerate(json_resp_cookie):
                 assert itm.response[i].cookie[j].domain == cookie["domain"]
                 assert itm.response[i].cookie[j].path == cookie["path"]
