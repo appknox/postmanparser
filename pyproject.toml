@@ -8,6 +8,11 @@ authors = ["Kiran Kumbhar <kiranpk189@gmail.com>"]
 python = "^3.8"
 black = "^21.5b1"
 flake8 = "^3.9.2"
+coverage = "^5.5"
+httpx = "^0.18.1"
+respx = "^0.17.0"
+flake8-import-order = "^0.18.1"
+zimports = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
