@@ -1,4 +1,6 @@
 # postmanparser
+![Build](https://github.com/appknox/postmanparser/actions/workflows/test.yml/badge.svg)
+[![codecov](https://codecov.io/gh/appknox/postmanparser/branch/main/graph/badge.svg?token=BXCg5XODJw)](https://codecov.io/gh/appknox/postmanparser)
 
 ## Introduction
 
