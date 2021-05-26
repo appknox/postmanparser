@@ -27,10 +27,10 @@ jobs:
     - name: Code Coverage
       run: |
         poetry run coverage xml
-    # - name: Codecov
-    #   uses: codecov/codecov-action@v1
-    #   with:
-    #     token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
     - name: Send SLACK notification
       uses: 8398a7/action-slack@v3
       with:
