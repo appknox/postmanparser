@@ -1,0 +1,41 @@
+name: Test
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Setup poetry
+      uses: Gr1N/setup-poetry@v4
+      with:
+        poetry-version: 1.1.4
+    - name: Install dependencies
+      run: |
+        poetry install --no-root
+    - name: Lint with flake8
+      run: poetry run flake8
+    - name: Test with pytest
+      run: |
+        poetry run coverage run --source ./ -m pytest
+    - name: Code Coverage
+      run: |
+        poetry run coverage xml
+    # - name: Codecov
+    #   uses: codecov/codecov-action@v1
+    #   with:
+    #     token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Send SLACK notification
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: always()
