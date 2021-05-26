@@ -17,7 +17,7 @@ class AuthAttribute:
     def parse(cls, data: dict):
         key = data.get("key")
         if key is None:
-            raise Exception("auth-attribute object should have 'key' property")
+            raise MissingRequiredFieldException("auth-attribute object should have 'key' property")
         return cls(key, value=data.get("value"), auth_attr_type=data.get("type", ""))
 
 

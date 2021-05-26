@@ -31,8 +31,8 @@ class Item:
     def parse(cls, data: dict):
         _request = data.get("request")
         if _request is None:
-            raise Exception(
-                "Invalid postman collection: item must contain 'request' key"
+            raise MissingRequiredFieldException(
+                "'item' object must contain 'request' key"
             )
         if isinstance(_request, dict):
             request = Request.parse(data["request"])
@@ -40,7 +40,7 @@ class Item:
             request = _request
         else:
             raise InvalidPropertyValueException(
-                "value of 'request' property should be string or request object"
+                "Value of 'request' property should be string or request object"
             )
 
         response = None

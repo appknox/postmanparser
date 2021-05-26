@@ -1,3 +1,6 @@
+from postmanparser.exceptions import MissingRequiredFieldException
+import pytest
+from postmanparser.collection import Collection
 from postmanparser.proxy_config import ProxyConfig
 from postmanparser.item import ItemGroup
 from postmanparser.description import Description
@@ -73,3 +76,47 @@ def test_collection_valid_item_no_of_responses_should_match_with_json_item(
         else:
             assert itm.response == None
         i += 1
+
+
+def test_collection_missing_item_should_throws_exception():
+    invalid_collection = {
+        "info": {
+            "name": "invalid collection",
+            "id": "my-collection-id",
+            "schema": "https://schema.getpostman.com/#2.0.0",
+            "version": {
+                "major": "2",
+                "minor": "0",
+                "patch": "0",
+                "prerelease": "draft.1",
+            },
+        },
+        "variable": [
+            {"id": "var-1", "type": "string", "value": "hello-world"},
+        ],
+    }
+    collection = Collection()
+    with pytest.raises(MissingRequiredFieldException):
+        collection.parse(invalid_collection)
+
+
+def test_collection_missing_info_should_throws_exception():
+    invalid_collection = {
+        "variable": [
+            {"id": "var-1", "type": "string", "value": "hello-world"},
+        ],
+        "item": [
+            {
+                "id": "request-200",
+                "description": {
+                    "content": "<h1>This is H1</h1> <i>italic</i> <script>this will be dropped in toString()</script>",
+                    "version": "2.0.1-abc+efg",
+                },
+                "name": "200 ok",
+                "request": "http://echo.getpostman.com/status/200",
+            }
+        ],
+    }
+    collection = Collection()
+    with pytest.raises(MissingRequiredFieldException):
+        collection.parse(invalid_collection)

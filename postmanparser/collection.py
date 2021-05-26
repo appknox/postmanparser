@@ -1,4 +1,5 @@
 import json
+from postmanparser.exceptions import MissingRequiredFieldException
 from postmanparser.auth import Auth
 from postmanparser.variable import Variable
 from typing import List, Union
@@ -18,12 +19,13 @@ class Collection:
 
     def validate(self, data):
         if "info" not in data or "item" not in data:
-            raise Exception(
+            raise MissingRequiredFieldException(
                 "Invalid Postman collection: Required 'info' and 'item' properties in 'collection' object"
             )
 
     def parse(self, data: dict):
-        self.item = parse_item_list(data.get("item"))
+        self.validate(data)
+        self.item = parse_item_list(data["item"])
         self.info = Info.parse(data["info"])
         var_list = data.get("variable", [])
         if not var_list:
