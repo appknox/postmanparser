@@ -39,7 +39,9 @@ class Request:
             body = RequestBody.parse(data["body"])
         auth = Auth.parse(data["auth"]) if "auth" in data else None
         proxy = ProxyConfig.parse(data["proxy"]) if "proxy" in data else None
-        certificate = Auth.parse(data["certificate"]) if "certificate" in data else None
+        certificate = (
+            Certificate.parse(data["certificate"]) if "certificate" in data else None
+        )
 
         url = data.get("url", "")
         if isinstance(url, dict):

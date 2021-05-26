@@ -23,6 +23,6 @@ class Certificate:
         return cls(
             name=data.get("name", ""),
             matches=data.get("matches", None),
-            key=data.get("key", {}),
+            key=CertificateKey.parse(data.get("key", {})),
             passphrase=data.get("passphrase", ""),
         )
