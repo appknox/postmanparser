@@ -1,8 +1,17 @@
 [tool.poetry]
 name = "postmanparser"
 version = "0.1.0"
-description = ""
+description = "Postman collection parser for python"
 authors = ["Appknox <engineering@appknox.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/appknox/postmanparser"
+keywords = ["postman", "appknox", "postmanparser"]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Build Tools"
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
