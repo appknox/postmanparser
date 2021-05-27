@@ -2,7 +2,7 @@
 name = "postmanparser"
 version = "0.1.0"
 description = ""
-authors = ["Kiran Kumbhar <kiranpk189@gmail.com>"]
+authors = ["Appknox <engineering@appknox.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
