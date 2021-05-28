@@ -18,21 +18,18 @@ def test_collection_valid_item_fields_should_match_with_json_item(
     collection, json_data
 ):
     json_item = json_data["item"]
-    i = 0
-    for itm in collection.item:
+    for i, itm in enumerate(collection.item):
         if type(itm) is ItemGroup:
             continue
         assert itm.id == json_item[i].get("id", "")
         assert itm.name == json_item[i].get("name", "")
-        i += 1
 
 
 def test_collection_valid_item_description_should_match_with_json_item(
     collection, json_data
 ):
     json_item = json_data["item"]
-    i = 0
-    for itm in collection.item:
+    for i, itm in enumerate(collection.item):
         if type(itm) is ItemGroup:
             continue
         json_desc = json_item[i].get("description")
@@ -44,13 +41,11 @@ def test_collection_valid_item_description_should_match_with_json_item(
             assert itm.description.content == json_desc.get("content", "")
             assert itm.description.desc_type == json_desc.get("type", "")
             assert itm.description.version == json_desc.get("version", "")
-        i += 1
 
 
 def test_collection_valid_item_should_have_request(collection, json_data):
     json_item = json_data["item"]
-    i = 0
-    for itm in collection.item:
+    for i, itm in enumerate(collection.item):
         if type(itm) is ItemGroup:
             continue
         json_req = json_item[i].get("request")
@@ -58,15 +53,13 @@ def test_collection_valid_item_should_have_request(collection, json_data):
             assert itm.request == json_req
         else:
             assert itm.request is not None
-        i += 1
 
 
 def test_collection_valid_item_no_of_responses_should_match_with_json_item(
     collection, json_data
 ):
     json_item = json_data["item"]
-    i = 0
-    for itm in collection.item:
+    for i, itm in enumerate(collection.item):
         if type(itm) is ItemGroup:
             continue
         json_resp = json_item[i].get("response")
@@ -74,7 +67,6 @@ def test_collection_valid_item_no_of_responses_should_match_with_json_item(
             assert len(itm.response) == len(json_resp)
         else:
             assert itm.response is None
-        i += 1
 
 
 def test_collection_missing_item_should_throws_exception():
