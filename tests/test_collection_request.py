@@ -18,8 +18,8 @@ def test_collection_item_req_fields_should_match_json_item_req(
         json_req_header = json_req.get("header", "")
         if isinstance(json_req_header, list):
             for idx, header in enumerate(json_req_header):
-                itm.request.header[idx].key == header["key"]
-                itm.request.header[idx].value == header["value"]
+                assert itm.request.header[idx].key == header["key"]
+                assert itm.request.header[idx].value == header["value"]
         else:
             assert itm.request.header == json_req_header
 
@@ -73,7 +73,7 @@ def test_collection_item_req_auth_should_match_json_item_req_auth(
             keyval = json_req_auth.get(json_req_auth_type)
             if auth_attrs is None:
                 continue
-            for idx, auth_attr in enumerate(auth_attrs):
+            for auth_attr in auth_attrs:
                 assert auth_attr.key in keyval
                 assert auth_attr.value == keyval[auth_attr.key]
                 assert auth_attr.auth_attr_type == keyval.get("type", "")
