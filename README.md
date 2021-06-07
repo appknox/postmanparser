@@ -44,6 +44,37 @@ postmanparser also validates for the required fields mentioned by postman schema
 ### Reading the data
 Postman collection contains group of requests and one or more folders having group of requests and/or nested folders in it.
 
+#### Getting all the requests in the collection
+
+You can retreive all the requests present in the collection using `get_requests()` method. It will recursively search through all the folders present in the collection and will return list of requests.
+
+```python
+collection = Collection()
+collection.parse_from_file("path/to/postman/schema.json")
+requests = collection.get_requests()
+for request in requests:
+        print(request) #Either a Request object or str
+```
+
+#### Getting requests by folder in the collection
+
+You can retrieve the requests inside specific folder using dict returned by `get_requests_map()` method. The key of the dict is path to the folder with trail backlash and value is list of requests of type `Request` or `str`.
+
+For e.g. to get requests inside folder2 which is nested in folder1
+
+
+
+```python
+collection = Collection()
+collection.parse_from_file("path/to/postman/schema.json")
+requests_map = collection.get_requests_map()
+print(requests_map["/folder1/folder2/"]) #List of either Request Object or str
+print(requests_map["/"]) #Get requests at Root level
+```
+
+
+#### Reading requests from collection items
+
 You can access requests in the collections as shown in below.
 ```python
 for item in collection.item:

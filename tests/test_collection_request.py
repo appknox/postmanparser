@@ -1,3 +1,4 @@
+from postmanparser.collection import Collection
 from postmanparser.item import ItemGroup
 
 
@@ -77,3 +78,71 @@ def test_collection_item_req_auth_should_match_json_item_req_auth(
                 assert auth_attr.key in keyval
                 assert auth_attr.value == keyval[auth_attr.key]
                 assert auth_attr.auth_attr_type == keyval.get("type", "")
+
+
+def test_collection_get_requests_should_return_all_requests(collection, json_data):
+    assert len(collection.get_requests()) == 7
+
+
+def test_collection_get_requests_should_return_0_requests_for_empty_item():
+    _collection = {
+        "info": {
+            "name": "invalid collection",
+            "id": "my-collection-id",
+            "schema": "https://schema.getpostman.com/#2.0.0",
+            "version": {
+                "minor": "0",
+                "patch": "0",
+                "major": "1",
+                "prerelease": "draft.1",
+            },
+        },
+        "variable": [
+            {"id": "var-1", "type": "string", "value": "hello-world"},
+        ],
+        "item": [],
+    }
+    collection = Collection()
+    collection.parse(_collection)
+    assert len(collection.get_requests()) == 0
+
+
+def test_collection_get_requests_map_should_return_0_requests_for_empty_item():
+    _collection = {
+        "info": {
+            "name": "invalid collection",
+            "id": "my-collection-id",
+            "schema": "https://schema.getpostman.com/#2.0.0",
+            "version": {
+                "minor": "0",
+                "patch": "0",
+                "major": "1",
+                "prerelease": "draft.1",
+            },
+        },
+        "variable": [
+            {"id": "var-1", "type": "string", "value": "hello-world"},
+        ],
+        "item": [],
+    }
+    collection = Collection()
+    collection.parse(_collection)
+    req_map = collection.get_requests_map()
+    assert len(req_map) == 1
+    assert len(req_map["/"]) == 0
+
+
+def test_collection_get_requests_map_should_return_all_requests_folders(
+    collection, json_data
+):
+    req_map = collection.get_requests_map()
+    assert "/" in req_map
+    assert "/This is a folder/" in req_map
+    assert "/This is a folder/my-folder-2/" in req_map
+    assert "/This is a folder/my-folder-2/This is a blank/" in req_map
+    assert "/This is a folder/my-folder-2/Solo Folder/" in req_map
+    assert len(req_map["/"]) == 2
+    assert len(req_map["/This is a folder/"]) == 3
+    assert len(req_map["/This is a folder/my-folder-2/"]) == 0
+    assert len(req_map["/This is a folder/my-folder-2/This is a blank/"]) == 1
+    assert len(req_map["/This is a folder/my-folder-2/Solo Folder/"]) == 1

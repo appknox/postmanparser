@@ -58,3 +58,34 @@ class Collection:
             return
         self.validate(response.json())
         self.parse(response.json())
+
+    def _get_requests_from_items(self, items: List[Union[Item, ItemGroup]]):
+        requests = []
+        for itm in items:
+            if isinstance(itm, Item):
+                requests.append(itm.request)
+                continue
+
+            requests.extend(self._get_requests_from_items(itm.item))
+        return requests
+
+    def _get_requests_map_from_items(
+        self, items: List[Union[Item, ItemGroup]], folder: str
+    ):
+        requests = {}
+        requests[folder] = []
+        for itm in items:
+            if isinstance(itm, Item):
+                requests[folder].append(itm.request)
+                continue
+
+            _folder = f"{folder}{itm.name}/"
+
+            requests.update(self._get_requests_map_from_items(itm.item, _folder))
+        return requests
+
+    def get_requests(self):
+        return self._get_requests_from_items(self.item)
+
+    def get_requests_map(self):
+        return self._get_requests_map_from_items(self.item, "/")
