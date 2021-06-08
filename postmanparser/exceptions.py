@@ -16,3 +16,11 @@ class InvalidPropertyValueException(Exception):
 
 class InvalidObjectException(Exception):
     pass
+
+
+class FolderNotFoundError(Exception):
+    """
+    Item Group does not exists
+    """
+
+    pass

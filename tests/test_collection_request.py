@@ -1,4 +1,7 @@
+import pytest
+
 from postmanparser.collection import Collection
+from postmanparser.exceptions import FolderNotFoundError
 from postmanparser.item import ItemGroup
 
 
@@ -80,8 +83,44 @@ def test_collection_item_req_auth_should_match_json_item_req_auth(
                 assert auth_attr.auth_attr_type == keyval.get("type", "")
 
 
-def test_collection_get_requests_should_return_all_requests(collection, json_data):
-    assert len(collection.get_requests()) == 7
+def test_collection_get_requests_should_return_all_requests_at_root_lvl(collection):
+    assert len(collection.get_requests()) == 2
+    assert len(collection.get_requests("This is a folder")) == 3
+
+
+def test_get_requests_with_folder_should_return_all_request_at_folder_lvl(collection):
+    assert len(collection.get_requests(folder="This is a folder/my-folder-2")) == 0
+
+
+def test_get_requests_with_invalid_folder_name_should_raise_exception(collection):
+    with pytest.raises(FolderNotFoundError):
+        collection.get_requests(folder="InvalidFolderName")
+
+
+def test_get_requests_with_recursive_true_should_return_req_map(collection):
+    req_map = collection.get_requests(folder="This is a folder", recursive=True)
+    assert "This is a folder" in req_map
+    assert "This is a folder/my-folder-2" in req_map
+    assert "This is a folder/my-folder-2/This is a blank" in req_map
+    assert "This is a folder/my-folder-2/Solo Folder" in req_map
+    assert len(req_map["This is a folder"]) == 3
+    assert len(req_map["This is a folder/my-folder-2"]) == 0
+    assert len(req_map["This is a folder/my-folder-2/This is a blank"]) == 1
+    assert len(req_map["This is a folder/my-folder-2/Solo Folder"]) == 1
+
+
+def test_get_requests_with_recursive_true_should_return_req_map_root_lvl(collection):
+    req_map = collection.get_requests(recursive=True)
+    assert "/" in req_map
+    assert "This is a folder" in req_map
+    assert "This is a folder/my-folder-2" in req_map
+    assert "This is a folder/my-folder-2/This is a blank" in req_map
+    assert "This is a folder/my-folder-2/Solo Folder" in req_map
+    assert len(req_map["/"]) == 2
+    assert len(req_map["This is a folder"]) == 3
+    assert len(req_map["This is a folder/my-folder-2"]) == 0
+    assert len(req_map["This is a folder/my-folder-2/This is a blank"]) == 1
+    assert len(req_map["This is a folder/my-folder-2/Solo Folder"]) == 1
 
 
 def test_collection_get_requests_should_return_0_requests_for_empty_item():
@@ -105,44 +144,3 @@ def test_collection_get_requests_should_return_0_requests_for_empty_item():
     collection = Collection()
     collection.parse(_collection)
     assert len(collection.get_requests()) == 0
-
-
-def test_collection_get_requests_map_should_return_0_requests_for_empty_item():
-    _collection = {
-        "info": {
-            "name": "invalid collection",
-            "id": "my-collection-id",
-            "schema": "https://schema.getpostman.com/#2.0.0",
-            "version": {
-                "minor": "0",
-                "patch": "0",
-                "major": "1",
-                "prerelease": "draft.1",
-            },
-        },
-        "variable": [
-            {"id": "var-1", "type": "string", "value": "hello-world"},
-        ],
-        "item": [],
-    }
-    collection = Collection()
-    collection.parse(_collection)
-    req_map = collection.get_requests_map()
-    assert len(req_map) == 1
-    assert len(req_map["/"]) == 0
-
-
-def test_collection_get_requests_map_should_return_all_requests_folders(
-    collection, json_data
-):
-    req_map = collection.get_requests_map()
-    assert "/" in req_map
-    assert "/This is a folder/" in req_map
-    assert "/This is a folder/my-folder-2/" in req_map
-    assert "/This is a folder/my-folder-2/This is a blank/" in req_map
-    assert "/This is a folder/my-folder-2/Solo Folder/" in req_map
-    assert len(req_map["/"]) == 2
-    assert len(req_map["/This is a folder/"]) == 3
-    assert len(req_map["/This is a folder/my-folder-2/"]) == 0
-    assert len(req_map["/This is a folder/my-folder-2/This is a blank/"]) == 1
-    assert len(req_map["/This is a folder/my-folder-2/Solo Folder/"]) == 1
