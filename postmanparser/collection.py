@@ -7,11 +7,13 @@ from typing import Union
 import httpx
 
 from postmanparser.auth import Auth
-from postmanparser.exceptions import FolderNotFoundError, MissingRequiredFieldException
+from postmanparser.exceptions import FolderNotFoundError
+from postmanparser.exceptions import MissingRequiredFieldException
 from postmanparser.info import Info
 from postmanparser.item import Item
 from postmanparser.item import ItemGroup
 from postmanparser.item import parse_item_list
+from postmanparser.request import Request
 from postmanparser.variable import Variable
 
 
@@ -60,12 +62,16 @@ class Collection:
         self.parse(response.json())
 
     @staticmethod
-    def _get_requests_from_items(items: List[Union[Item, ItemGroup]]):
+    def _get_requests_from_items(
+        items: List[Union[Item, ItemGroup]], recursive: bool = True
+    ) -> List[Union[Request, str]]:
         requests = []
         for itm in items:
             if isinstance(itm, Item):
                 requests.append(itm.request)
                 continue
+            if recursive:
+                requests.extend(Collection._get_requests_from_items(itm.item))
         return requests
 
     @staticmethod
@@ -92,13 +98,7 @@ class Collection:
                 result.append(item)
         return result
 
-    def get_requests(self, folder: str = "", recursive: bool = False):
-        if not folder:
-            if recursive:
-                return self._get_requests_map_from_items(self.item, folder)
-
-            return self._get_requests_from_items(self.item)
-
+    def get_items_of_folder(self, folder: str) -> List[Union[Item, ItemGroup]]:
         nested_folders = folder.split("/")
         items = self.item
         for _folder in nested_folders:
@@ -113,7 +113,19 @@ class Collection:
                     f"Folder with name {_folder} does not exists."
                 )
             items = next_item_group.item
-        if not recursive:
-            return self._get_requests_from_items(items)
+        return items
 
-        return self._get_requests_map_from_items(items, folder)
+    def get_requests(
+        self, folder: str = "", recursive: bool = True
+    ) -> List[Union[Request, str]]:
+        if not folder:
+            return self._get_requests_from_items(self.item, recursive=recursive)
+
+        items = self.get_items_of_folder(folder)
+        return self._get_requests_from_items(items, recursive=recursive)
+
+    def get_requests_map(self, folder: str = ""):
+        if folder:
+            items = self.get_items_of_folder(folder)
+            return self._get_requests_map_from_items(items, folder)
+        return self._get_requests_map_from_items(self.item, folder)

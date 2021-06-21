@@ -44,9 +44,10 @@ postmanparser also validates for the required fields mentioned by postman schema
 ### Reading the data
 Postman collection contains group of requests and one or more folders having group of requests and/or nested folders in it.
 
-#### Getting requests from the collection at root level
+#### Getting requests from the collection
 
-You can retreive all the requests present in the collection at root level using `get_requests()` method.
+You can retreive all the requests present in the collection using `get_requests()` method.
+This method will recursively search for the requests inside folders is present.
 
 ```python
 collection = Collection()
@@ -56,30 +57,29 @@ for request in requests:
         print(request) #Either a Request object or str
 ```
 
-#### Getting requests by folder in the collection
-
 You can retrieve the requests inside specific folder by using `folder="folder_name"` in `get_requests` method. To get requests from the nested folder, use folder path separated by `/`
 
 For e.g. to get requests inside folder2 which is nested in folder1
-
-
 ```python
-collection = Collection()
-collection.parse_from_file("path/to/postman/schema.json")
-requests = collection.get_requests(folder="folder1")
-requests = collection.get_requests(folder="folder1/folder2")
-
+requests = collection.get_requests(folder="folder/sub_folder")
 ```
 
+You can pass `recursive=False` to `get_requests()` if you don't want to do recusrive lookup. In this case
+you will get all the requests present at the root level of collection or at the folder level is folder is specified.
 
-#### Getting requests recursively from specified path
+```python
+requests = collection.get_requests(recursive=False)
+```
 
-You can access requests in the collections as requests map using `recursive=True`. The key of the dict is path to the folder separated by backlash and value is list of requests of type `Request` or `str`.
+#### Getting requests mapped by folder in the collection
+You can access requests in the collections as requests map using `get_requests_map()`. The key of the dict is path to the folder separated by backlash and value is list of requests of type `Request` or `str`.
+This will be recursive search for all the folders and sub folders inside it.
+
 ```python
 collection = Collection()
 collection.parse_from_file("path/to/postman/schema.json")
-requests = collection.get_requests(folder="folder1", recursive=True)
-
+requests = collection.get_requests_map()
+requests = collection.get_requests_map(folder="folder/sub_folder")
 ```
 
 ### Validation
@@ -92,11 +92,16 @@ If schema found to be invalid following exception will be thrown.
 ## Schema Support
 postmanparser is still in early stages and will be updated with missing schema components soon.
 
-### Version
-postmanparser supports collection schema v2.0.0 and v2.1.0.
-
-### Object support
-postmanparser currently does not support parsing of following objects. Might be added in future.
-
+Following are the objects which are not supported yet but will be added in the future.
 - events
 - protocolProfileBehavior
+
+## Collection SDK Compatibility
+
+Currently postmanparser is not aligned with collection SDK node module. http://www.postmanlabs.com/postman-collection/
+
+This Might be added in future. Feel free to raise the PR.
+
+
+## Version Compatibility
+postmanparser supports collection schema v2.0.0 and v2.1.0.
