@@ -93,7 +93,6 @@ If schema found to be invalid following exception will be thrown.
 postmanparser is still in early stages and will be updated with missing schema components soon.
 
 Following are the objects which are not supported yet but will be added in the future.
-- events
 - protocolProfileBehavior
 
 ## Collection SDK Compatibility

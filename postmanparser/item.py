@@ -6,6 +6,7 @@ from typing import Union
 
 from postmanparser.auth import Auth
 from postmanparser.description import Description
+from postmanparser.event import Event
 from postmanparser.exceptions import InvalidObjectException
 from postmanparser.exceptions import InvalidPropertyValueException
 from postmanparser.exceptions import MissingRequiredFieldException
@@ -25,10 +26,12 @@ class Item:
     name: str = ""
     description: Union[Description, str, None] = None
     response: List[Response] = None
+    event: List[Event] = None
 
     @classmethod
     def parse(cls, data: dict):
         _request = data.get("request")
+        event = data.get("event", [])
         if _request is None:
             raise MissingRequiredFieldException(
                 "'item' object must contain 'request' key"
@@ -57,6 +60,7 @@ class Item:
             name=data.get("name", ""),
             description=description,
             response=response,
+            event=[Event.parse(_) for _ in event] if event else None,
         )
 
 
@@ -67,6 +71,7 @@ class ItemGroup:
     description: Description = None
     variable: Variable = None
     auth: Auth = None
+    event: List[Event] = None
 
     @classmethod
     def parse(cls, data):
@@ -77,7 +82,7 @@ class ItemGroup:
                 "'item-group' object should have 'item' property"
             )
         items = parse_item_list(item_list)
-
+        event = data.get("event", [])
         description = data.get("description")
         if isinstance(description, dict):
             description = Description.parse(description)
@@ -88,6 +93,7 @@ class ItemGroup:
             description=description,
             variable=Variable.parse(data["variable"]) if "variable" in data else None,
             auth=Auth.parse(data["auth"]) if "auth" in data else None,
+            event=[Event.parse(_) for _ in event] if event else None,
         )
 
 
