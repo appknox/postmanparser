@@ -2,6 +2,7 @@ import pytest
 
 from postmanparser.collection import Collection
 from postmanparser.exceptions import MissingRequiredFieldException
+from postmanparser.item import Item
 from postmanparser.item import ItemGroup
 
 
@@ -111,3 +112,20 @@ def test_collection_missing_info_should_throws_exception():
     collection = Collection()
     with pytest.raises(MissingRequiredFieldException):
         collection.parse(invalid_collection)
+
+
+def test_collection_item_event_should_match_with_json_coll_itm_events(
+    collection, json_data
+):
+    json_item = json_data["item"]
+    for i, itm in enumerate(collection.item):
+        if isinstance(itm, Item):
+            assert len(itm.event) == len(json_item[i]["event"])
+
+
+def test_collection_item_grp_event_should_be_none_if_no_json_coll_itm_grp_events(
+    collection,
+):
+    for itm in collection.item:
+        if isinstance(itm, ItemGroup):
+            assert itm.event is None

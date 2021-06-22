@@ -7,6 +7,7 @@ from typing import Union
 import httpx
 
 from postmanparser.auth import Auth
+from postmanparser.event import Event
 from postmanparser.exceptions import FolderNotFoundError
 from postmanparser.exceptions import MissingRequiredFieldException
 from postmanparser.info import Info
@@ -24,6 +25,7 @@ class Collection:
     auth: Auth = None
     info: Info = field(init=False)
     item: List[Union[Item, ItemGroup]] = field(init=False)
+    event: List[Event] = None
 
     def validate(self, data):
         if "info" not in data or "item" not in data:
@@ -36,12 +38,12 @@ class Collection:
         self.validate(data)
         self.item = parse_item_list(data["item"])
         self.info = Info.parse(data["info"])
-        var_list = data.get("variable", [])
-        if not var_list:
-            return
-        self.variable = []
-        for var in var_list:
-            self.variable.append(Variable.parse(var))
+        var = data.get("variable", [])
+        if var:
+            self.variable = [Variable.parse(_) for _ in var]
+        event = data.get("event", [])
+        if event:
+            self.event = [Event.parse(_) for _ in event]
 
     def parse_from_file(self, file_path):
         self.file_path = file_path

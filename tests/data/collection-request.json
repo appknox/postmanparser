@@ -89,10 +89,6 @@
             "event": [
                 {
                     "listen": "test",
-                    "script": "my-global-script-1"
-                },
-                {
-                    "listen": "test",
                     "script": {
                         "type": "text/javascript",
                         "exec": "console.log(\"hello\");"
@@ -162,10 +158,6 @@
                 }
             ],
             "event": [
-                {
-                    "listen": "test",
-                    "script": "my-global-script-1"
-                },
                 {
                     "listen": "test",
                     "script": {
