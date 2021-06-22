@@ -1,4 +1,7 @@
+import pytest
+
 from postmanparser.collection import Collection
+from postmanparser.exceptions import MissingRequiredFieldException
 
 
 def test_collection_events_should_match_with_json_coll_events(collection, json_data):
@@ -44,3 +47,36 @@ def test_collection_event_should_be_none_if_no_event_present():
     collection = Collection()
     collection.parse(coll)
     assert collection.event is None
+
+
+def test_collection_event_sould_have_listen_prop():
+    invalid_coll = {
+        "info": {
+            "name": "invalid collection",
+            "id": "my-collection-id",
+            "schema": "https://schema.getpostman.com/#2.0.0",
+        },
+        "variable": [
+            {"id": "var-1", "type": "string", "value": "hello-world"},
+        ],
+        "item": [
+            {
+                "id": "request-200",
+                "description": {
+                    "content": "<script>test toString()</script>",
+                    "version": "2.0.1-abc+efg",
+                },
+                "name": "200 ok",
+                "request": "http://echo.getpostman.com/status/200",
+            }
+        ],
+        "event": [
+            {
+                "id": "my-global-script-1",
+                "script": {"type": "text/javascript", "exec": 'console.log("hello");'},
+            }
+        ],
+    }
+    collection = Collection()
+    with pytest.raises(MissingRequiredFieldException):
+        collection.parse(invalid_coll)
