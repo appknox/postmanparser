@@ -38,6 +38,7 @@ class Collection:
         self.validate(data)
         self.item = parse_item_list(data["item"])
         self.info = Info.parse(data["info"])
+        self.auth = Auth.parse(data["auth"]) if "auth" in data else None
         var = data.get("variable", [])
         if var:
             self.variable = [Variable.parse(_) for _ in var]
