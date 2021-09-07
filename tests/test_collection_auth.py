@@ -42,17 +42,9 @@ def test_collection_auth_parse_root_auth_should_return_apikey_object():
         "auth": {
             "type": "apikey",
             "apikey": [
-                {
-                    "key": "value",
-                    "value": "API_VALUE",
-                    "type": "string"
-                },
-                {
-                    "key": "key",
-                    "value": "API_KEY",
-                    "type": "string"
-                }
-            ]
+                {"key": "value", "value": "API_VALUE", "type": "string"},
+                {"key": "key", "value": "API_KEY", "type": "string"},
+            ],
         },
         "item": [
             {
@@ -74,4 +66,3 @@ def test_collection_auth_parse_root_auth_should_return_apikey_object():
     assert len(collection.auth.apikey) == 2
     assert collection.auth.apikey[0].key is not None
     assert collection.auth.apikey[1].key is not None
-
