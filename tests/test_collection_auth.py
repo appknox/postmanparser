@@ -5,7 +5,7 @@ from postmanparser.constants import AuthType
 def test_collection_auth_empty_root_auth_should_return_none():
     coll = {
         "info": {
-            "name": "invalid collection",
+            "name": "valid collection",
             "id": "my-collection-id",
             "schema": "https://schema.getpostman.com/#2.0.0",
         },
@@ -29,10 +29,10 @@ def test_collection_auth_empty_root_auth_should_return_none():
     assert collection.auth is None
 
 
-def test_collection_auth_empty_root_auth_should_return_none():
+def test_collection_auth_parse_root_auth_should_return_apikey_object():
     coll = {
         "info": {
-            "name": "invalid collection",
+            "name": "valid collection",
             "id": "my-collection-id",
             "schema": "https://schema.getpostman.com/#2.0.0",
         },
@@ -70,8 +70,8 @@ def test_collection_auth_empty_root_auth_should_return_none():
     collection.parse(coll)
     assert collection.auth is not None
     assert collection.auth.auth_type == AuthType.APIKEY.value
-    for auth_type in AuthType:
-        if auth_type.value == AuthType.APIKEY.value:
-            assert collection.auth.auth_type is not None
-        else:
-            assert getattr(collection.auth, auth_type.value) is None
+    assert getattr(collection.auth, AuthType.APIKEY.value) is not None
+    assert len(collection.auth.apikey) == 2
+    assert collection.auth.apikey[0].key is not None
+    assert collection.auth.apikey[1].key is not None
+
