@@ -6,26 +6,25 @@ def test_get_url_variables():
         "info": {
             "_postman_id": "9c76aeae-011c-4327-96c4-17146aacd14d",
             "name": "example",
-            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+            "schema": "https://schema.postman.com/#2.0.0",
         },
-        "item": [{
-            "name": "example",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "https://example.com/status/:id",
-                    "protocol": "https",
-                    "host": ["example", "com"],
-                    "path": ["status", ":id"],
-                    "variable": [{
-                        "key": "id",
-                        "value": "1"
-                    }]
-                }
-            },
-            "response": []
-        }]
+        "item": [
+            {
+                "name": "example",
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "https://example.com/status/:id",
+                        "protocol": "https",
+                        "host": ["example", "com"],
+                        "path": ["status", ":id"],
+                        "variable": [{"key": "id", "value": "1"}],
+                    },
+                },
+                "response": [],
+            }
+        ],
     }
 
     collection = Collection()
@@ -44,22 +43,24 @@ def test_empty_variabes_should_return_none(collection):
         "info": {
             "_postman_id": "9c76aeae-011c-4327-96c4-17146aacd14d",
             "name": "example",
-            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+            "schema": "https://schema.postman.com/#2.0.0",
         },
-        "item": [{
-            "name": "example",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "https://example.com/status/",
-                    "protocol": "https",
-                    "host": ["example", "com"],
-                    "path": ["status"]
-                }
-            },
-            "response": []
-        }]
+        "item": [
+            {
+                "name": "example",
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "https://example.com/status/",
+                        "protocol": "https",
+                        "host": ["example", "com"],
+                        "path": ["status"],
+                    },
+                },
+                "response": [],
+            }
+        ],
     }
 
     collection = Collection()
