@@ -38,7 +38,7 @@ def test_get_url_variables():
     assert url.variable[0].value == "1"
 
 
-def test_empty_variabes_should_return_none(collection):
+def test_empty_variables_should_return_empty_list(collection):
     _collection = {
         "info": {
             "_postman_id": "9c76aeae-011c-4327-96c4-17146aacd14d",
@@ -69,4 +69,4 @@ def test_empty_variabes_should_return_none(collection):
     assert len(collection.item) == 1
 
     url = collection.item[0].request.url
-    assert url.variable is None
+    assert url.variable == []

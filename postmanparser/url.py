@@ -30,7 +30,7 @@ class Url:
         if query:
             query = [KeyVal.parse(_) for _ in query]
 
-        variable = data.get("variable", None)
+        variable = data.get("variable", [])
         if variable:
             variable = [Variable.parse(_) for _ in variable]
 
