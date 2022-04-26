@@ -25,9 +25,15 @@ class Url:
             port = "80"
         if protocol == "https":
             port = "443"
+
         query = data.get("query", None)
         if query:
             query = [KeyVal.parse(_) for _ in query]
+
+        variable = data.get("variable", [])
+        if variable:
+            variable = [Variable.parse(_) for _ in variable]
+
         return cls(
             data.get("raw", ""),
             data.get("protocol", ""),
@@ -36,4 +42,5 @@ class Url:
             path=data.get("path", ""),
             query=query,
             url_hash=data.get("hash", ""),
+            variable=variable,
         )
