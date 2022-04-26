@@ -26,7 +26,7 @@ class Url:
         if protocol == "https":
             port = "443"
 
-        query = data.get("query", None)
+        query = data.get("query", [])
         if query:
             query = [KeyVal.parse(_) for _ in query]
 
