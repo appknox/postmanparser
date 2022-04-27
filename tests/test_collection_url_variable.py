@@ -70,3 +70,37 @@ def test_empty_variables_should_return_empty_list(collection):
 
     url = collection.item[0].request.url
     assert url.variable == []
+
+
+def test_empty_queries_should_return_empty_list(collection):
+    _collection = {
+        "info": {
+            "_postman_id": "9c76aeae-011c-4327-96c4-17146aacd14d",
+            "name": "example",
+            "schema": "https://schema.postman.com/#2.0.0",
+        },
+        "item": [
+            {
+                "name": "example",
+                "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                        "raw": "https://example.com/status/",
+                        "protocol": "https",
+                        "host": ["example", "com"],
+                        "path": ["status"],
+                    },
+                },
+                "response": [],
+            }
+        ],
+    }
+
+    collection = Collection()
+    collection.parse(_collection)
+
+    assert len(collection.item) == 1
+
+    url = collection.item[0].request.url
+    assert url.query == []
