@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "postmanparser"
-version = "0.1.6"
+version = "0.1.7"
 description = "Postman collection parser for python"
 authors = ["Appknox <engineering@appknox.com>"]
 license = "Apache-2.0"
