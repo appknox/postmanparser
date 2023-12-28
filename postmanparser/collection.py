@@ -26,16 +26,28 @@ class Collection:
     info: Info = field(init=False)
     item: List[Union[Item, ItemGroup]] = field(init=False)
     event: List[Event] = None
+    
+    def hasCollectionWrapper(self, data):
+        return "collection" in data
 
     def validate(self, data):
-        if "info" not in data or "item" not in data:
-            raise MissingRequiredFieldException(
-                "Invalid Postman collection: Required 'info' and 'item' "
+        if self.hasCollectionWrapper(data):
+            if "info" not in data["collection"] or "item" not in data["collection"]:
+                raise MissingRequiredFieldException(
+                "Invalid API Postman collection: Required 'info' and 'item' "
                 "properties in 'collection' object"
-            )
+                )
+        else:
+            if "info" not in data or "item" not in data:
+                raise MissingRequiredFieldException(
+                    "Invalid Postman collection: Required 'info' and 'item' "
+                    "properties in 'collection' object"
+                )
 
     def parse(self, data: dict):
         self.validate(data)
+        if self.hasCollectionWrapper(data):
+            data = data["collection"]
         self.item = parse_item_list(data["item"])
         self.info = Info.parse(data["info"])
         self.auth = Auth.parse(data["auth"]) if "auth" in data else None
@@ -53,10 +65,13 @@ class Collection:
             self.validate(data)
             self.parse(data)
 
-    def parse_from_url(self, url):
+    def parse_from_url(self, url, key = None):
         response = None
+        headers = None
+        if key is not None:
+            headers = {'X-Api-Key': key}
         try:
-            response = httpx.get(url)
+            response = httpx.get(url, headers=headers)
         except Exception:
             pass
         if response is None:
