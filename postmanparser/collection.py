@@ -26,7 +26,7 @@ class Collection:
     info: Info = field(init=False)
     item: List[Union[Item, ItemGroup]] = field(init=False)
     event: List[Event] = None
-    
+
     def hasCollectionWrapper(self, data):
         return "collection" in data
 
@@ -34,8 +34,8 @@ class Collection:
         if self.hasCollectionWrapper(data):
             if "info" not in data["collection"] or "item" not in data["collection"]:
                 raise MissingRequiredFieldException(
-                "Invalid API Postman collection: Required 'info' and 'item' "
-                "properties in 'collection' object"
+                    "Invalid API Postman collection: Required 'info' and 'item' "
+                    "properties in 'collection' object"
                 )
         else:
             if "info" not in data or "item" not in data:
@@ -65,7 +65,7 @@ class Collection:
             self.validate(data)
             self.parse(data)
 
-    def parse_from_url(self, url, key = None):
+    def parse_from_url(self, url, key=None):
         response = None
         headers = None
         if key is not None:
