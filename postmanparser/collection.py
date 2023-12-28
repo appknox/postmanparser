@@ -48,7 +48,7 @@ class Collection:
 
     def parse_from_file(self, file_path):
         self.file_path = file_path
-        with open(self.file_path, "r") as f:
+        with open(self.file_path, "r", encoding="utf-8") as f:
             data = json.loads(f.read())
             self.validate(data)
             self.parse(data)
