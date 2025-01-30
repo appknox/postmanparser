@@ -17,17 +17,13 @@ classifiers = [
 python = "^3.8"
 httpx = "^0.27.0"
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-black = "^21.5b1"
-zimports = "^0.4.0"
-flake8-import-order = "^0.18.1"
-flake8-bugbear = "^21.4.3"
-coverage = "^5.5"
-respx = "^0.17.0"
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.9.3"
+pytest = "^8.3.4"  # Updated
+black = "^23.9.1"  # Updated
+zimports = "^0.4.0"
+coverage = "^7.4.0"  # Updated
+respx = "^0.20.2"  # Updated
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
