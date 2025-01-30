@@ -10,7 +10,7 @@ def test_collection_no_of_item_should_match_with_json_items(collection, json_dat
     item_group = collection.item[2]
     json_item = json_data["item"]
     assert len(collection.item) == 3
-    assert type(item_group) == ItemGroup
+    assert isinstance(item_group, ItemGroup)
     assert item_group.name == json_item[2]["name"]
     assert len(item_group.item) == 4
 
